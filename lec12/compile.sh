@@ -11,8 +11,16 @@ gcc -Wall -g ${OPT} -D MAX=${MATRIX_SIZE} -D ITER=${NUM_ITERATIONS} -o cache_01_
 gcc -Wall -g ${OPT} -D MAX=${MATRIX_SIZE} -D ITER=${NUM_ITERATIONS} -o cache_01_fast_broken cache_01_fast_broken.c
 gcc -Wall -g ${OPT} -D MAX=${MATRIX_SIZE} -D ITER=${NUM_ITERATIONS} -o cache_01_fast_broken_fixed cache_01_fast_broken_fixed.c
 
-# Examples on loop fusion
-MATRIX_SIZE=1000000
+# Examples on false sharing
 NUM_ITERATIONS=1000
-gcc -Wall -g ${OPT} -D MAX=${MATRIX_SIZE} -D ITER=${NUM_ITERATIONS} -o cache_02_slow cache_02_slow.c
-gcc -Wall -g ${OPT} -D MAX=${MATRIX_SIZE} -D ITER=${NUM_ITERATIONS} -o cache_02_fast cache_02_fast.c
+OPT=-O0
+NUM_THREADS=4
+gcc -Wall -g ${OPT} -D NUM_THREADS=${NUM_THREADS} -D MAX=${MATRIX_SIZE} -D ITER=${NUM_ITERATIONS} -o cache_fs_slow cache_fs_slow.c -pthread
+gcc -Wall -g ${OPT} -D NUM_THREADS=${NUM_THREADS} -D MAX=${MATRIX_SIZE} -D ITER=${NUM_ITERATIONS} -o cache_fs_fast cache_fs_fast.c -pthread
+
+# Examples on branch prediction
+MATRIX_SIZE=1000000
+NUM_ITERATIONS=10
+OPT=-O0
+gcc -Wall -g ${OPT} -D MAX=${MATRIX_SIZE} -D ITER=${NUM_ITERATIONS} -o branch_prediction_slow branch_prediction_slow.c
+gcc -Wall -g ${OPT} -D MAX=${MATRIX_SIZE} -D ITER=${NUM_ITERATIONS} -o branch_prediction_fast branch_prediction_fast.c
