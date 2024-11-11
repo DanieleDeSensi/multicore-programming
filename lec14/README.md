@@ -1,0 +1,1 @@
+Exercises in this folder taken from the SC09 OpenMP tutorial by Mattson and Meadows (https://www.openmp.org/wp-content/uploads/omp-hands-on-SC08.pdf)

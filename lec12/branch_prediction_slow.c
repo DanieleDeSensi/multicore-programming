@@ -30,5 +30,5 @@ int main(int argc, char** argv) {
         total_time += stop-start;
     }
     printf("Total smaller %d\n", total_smaller);
-    printf("Average runtime %f usec\n", total_time/ITER);
+    printf("Average runtime %f sec\n", total_time/ITER);
 }

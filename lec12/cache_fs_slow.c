@@ -19,10 +19,11 @@ void* thread_fun(void* arg){
     CPU_ZERO(&cpuset);
     CPU_SET(thread_id, &cpuset);
     pthread_setaffinity_np(thread, sizeof(cpuset), &cpuset);
-
+    int t = data[thread_id];
     for(int i = 0; i < 100000; i++){
-        data[thread_id] += i;
+        t += i;
     }
+    data[thread_id] = t;
     return NULL;
 }
 
@@ -57,5 +58,5 @@ int main(int argc, char** argv) {
         total_time += stop-start;
     }
 
-    printf("Average runtime %f usec\n", total_time/ITER);
+    printf("Average runtime %f sec\n", total_time/ITER);
 }

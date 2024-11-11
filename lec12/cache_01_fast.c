@@ -35,5 +35,5 @@ int main(int argc, char** argv) {
         printf("%f\n", y[i]);
     **/
 
-    printf("Average runtime %f usec\n", total_time/ITER);
+    printf("Average runtime %f sec\n", total_time/ITER);
 }

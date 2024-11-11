@@ -1,6 +1,9 @@
 #!/bin/bash
 # You should use Makefiles instead ;)
 
+# Examples on profiling
+gcc -Wall -pg -O3 -o mat_vec_p mat_vec.c -pthread
+
 # Examples on row-major access
 MATRIX_SIZE=10000
 NUM_ITERATIONS=10
@@ -24,3 +27,6 @@ NUM_ITERATIONS=10
 OPT=-O0
 gcc -Wall -g ${OPT} -D MAX=${MATRIX_SIZE} -D ITER=${NUM_ITERATIONS} -o branch_prediction_slow branch_prediction_slow.c
 gcc -Wall -g ${OPT} -D MAX=${MATRIX_SIZE} -D ITER=${NUM_ITERATIONS} -o branch_prediction_fast branch_prediction_fast.c
+
+# Matrix-vector mul
+gcc -Wall -g -O3 -o mat_vec mat_vec.c -pthread

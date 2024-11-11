@@ -35,5 +35,5 @@ int main(int argc, char** argv) {
             dummy += y[i];        
     }
     printf("Dummy value to avoid dead code elimination: %f\n", dummy);
-    printf("Average runtime %f usec\n", total_time/ITER);
+    printf("Average runtime %f sec\n", total_time/ITER);
 }
