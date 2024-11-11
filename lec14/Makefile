@@ -1,30 +1,15 @@
 CC          = gcc
-CLINKER     = $(CC)
-OPTFLAGS    = -fopenmp
 LIBS        =
-
-CFLAGS	  = $(OPTFLAGS) 
+CFLAGS      = -fopenmp -Wall -pedantic -g
 
 RM=rm -f
 
-EXES=pi pi_solution_crit_rand pi_solution_crit pi_solution_ato pi_solution_red 
+EXES=pi pi_solution_crit_rand pi_solution_crit pi_solution_ato pi_solution_red matmul matmul_solution histogram histogram_solution_trivial_crit histogram_solution_trivial_ato histogram_solution_ato_local histogram_solution_red histogram_solution_ato_local_better
 
 all: $(EXES)
 
-pi: pi.c 
-	$(CLINKER) $(OPTFLAGS) -o pi pi.c $(LIBS)
-
-pi_solution_crit_rand: pi_solution_crit_rand.c
-	$(CLINKER) $(OPTFLAGS) -o pi_solution_crit_rand pi_solution_crit_rand.c $(LIBS)
-
-pi_solution_crit: pi_solution_crit.c
-	$(CLINKER) $(OPTFLAGS) -o pi_solution_crit pi_solution_crit.c $(LIBS)
-
-pi_solution_ato: pi_solution_ato.c
-	$(CLINKER) $(OPTFLAGS) -o pi_solution_ato pi_solution_ato.c $(LIBS)
-
-pi_solution_red: pi_solution_red.c
-	$(CLINKER) $(OPTFLAGS) -o pi_solution_red pi_solution_red.c $(LIBS)
+%: %.c 
+	$(CC) $(CFLAGS) -o $@ $@.c $(LIBS)
 
 clean:
 	$(RM) $(EXES) 
