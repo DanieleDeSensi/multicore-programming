@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
 	int Ndim, Pdim, Mdim;   /* A[N][P], B[P][M], C[N][M] */
 	int i,j,k;
 	
-	double *A, *B, *C, cval, tmp, err, errsq;
-      double dN, mflops;
+	double *A, *B, *C, cval, err, errsq;
+    double dN, mflops;
 	double start_time, run_time;
 
 
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 		for (j=0; j<Mdim; j++)
 			*(C+(i*Ndim+j)) = 0.0;
 	
-		start_time = omp_get_wtime();
+	start_time = omp_get_wtime();
 
 	/* Do the matrix product */
 

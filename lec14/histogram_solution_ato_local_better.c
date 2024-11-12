@@ -29,7 +29,7 @@ int main(int argc, char** argv){
     // Alternatively, we could check the value of the OMP_NUM_THREADS env variable
     int** counts_local = (int**)malloc(omp_get_max_threads() * sizeof(int*));
     for(int i = 0; i < omp_get_max_threads(); i++){
-        int adjusted_size = (max*sizeof(int) + 64 - ((max*sizeof(int)) % 64)); // Assuming 64 byte cache line size
+        int adjusted_size = (max*sizeof(int) + 64); // Add padding (assuming 64 byte cache line size)
         counts_local[i] = (int*)malloc(adjusted_size);
         for(unsigned long j = 0; j < max; j++){
             counts_local[i][j] = 0;
