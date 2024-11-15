@@ -11,10 +11,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include "my_timer.h"
-
-// Multi-threaded OpenMP header
-#include <omp.h>
+#include <pthread.h>
+#include "../my_timer.h"
 
 //Precision to use for calculations
 #define fptype float
@@ -183,13 +181,43 @@ fptype BlkSchlsEqEuroNoDiv( fptype sptprice,
     return OptionPrice;
 }
 
+void* bs_thread(void *tid_ptr) {
+    int i, j;
+    fptype price;
+    fptype priceDelta;
+    int tid = *(int *)tid_ptr;
+    int start = tid * (numOptions / nThreads);
+    int end = start + (numOptions / nThreads);
+
+    for (j=0; j<NUM_RUNS; j++) {
+        for (i=start; i<end; i++) {
+            /* Calling main function to calculate option value based on 
+             * Black & Scholes's equation.
+             */
+            price = BlkSchlsEqEuroNoDiv( sptprice[i], strike[i],
+                                         rate[i], volatility[i], otime[i], 
+                                         otype[i], 0);
+            prices[i] = price;
+
+#ifdef ERR_CHK
+            priceDelta = data[i].DGrefval - price;
+            if( fabs(priceDelta) >= 1e-4 ){
+                printf("Error on %d. Computed=%.5f, Ref=%.5f, Delta=%.5f\n",
+                       i, price, data[i].DGrefval, priceDelta);
+                numError ++;
+            }
+#endif
+        }
+    }
+
+    return NULL;
+}
+
 int main (int argc, char **argv)
 {
     FILE *file;
     int i;
     int loopnum;
-    fptype * buffer;
-    int * buffer2;
     int rv;
 
    if (argc != 4)
@@ -239,18 +267,13 @@ int main (int argc, char **argv)
     printf("Num of Options: %d\n", numOptions);
     printf("Num of Runs: %d\n", NUM_RUNS);
 
-#define PAD 256
-#define LINESIZE 64
-
-    buffer = (fptype *) malloc(5 * numOptions * sizeof(fptype) + PAD);
-    sptprice = (fptype *) (((unsigned long long)buffer + PAD) & ~(LINESIZE - 1));
+    sptprice = (fptype *) malloc(5 * numOptions * sizeof(fptype));
     strike = sptprice + numOptions;
     rate = strike + numOptions;
     volatility = rate + numOptions;
     otime = volatility + numOptions;
 
-    buffer2 = (int *) malloc(numOptions * sizeof(fptype) + PAD);
-    otype = (int *) (((unsigned long long)buffer2 + PAD) & ~(LINESIZE - 1));
+    otype = (int *) malloc(numOptions * sizeof(fptype));
 
     for (i=0; i<numOptions; i++) {
         otype[i]      = (data[i].OptionType == 'P') ? 1 : 0;
@@ -261,45 +284,28 @@ int main (int argc, char **argv)
         otime[i]      = data[i].t;
     }
 
-    printf("Size of data: %ld\n", numOptions * (sizeof(OptionData) + sizeof(int)));    
-    int j;
-    fptype price;
-#ifdef ERR_CHK
-    fptype priceDelta;
-#endif
+    printf("Size of data: %ld\n", numOptions * (sizeof(OptionData) + sizeof(int)));
 
+    int *tids;
+    tids = (int *) malloc (nThreads * sizeof(int));
+    pthread_t *threads;
+    threads = (pthread_t *) malloc (nThreads * sizeof(pthread_t));
+    
     double start, stop, end;
     GET_TIME(start);
-    
-    for (j=0; j<NUM_RUNS; j++) {
-        #pragma omp parallel num_threads(nThreads) private(i, price, priceDelta)
-        {
-            int tid = omp_get_thread_num();
-            int start_opt = tid * (numOptions / nThreads);
-            int end_opt = start_opt + (numOptions / nThreads);
-            for (i=start_opt; i<end_opt; i++) {
-                /* Calling main function to calculate option value based on 
-                * Black & Scholes's equation.
-                */
-                price = BlkSchlsEqEuroNoDiv( sptprice[i], strike[i],
-                                            rate[i], volatility[i], otime[i], 
-                                            otype[i], 0);
-                prices[i] = price;
 
-    #ifdef ERR_CHK
-                priceDelta = data[i].DGrefval - price;
-                if( fabs(priceDelta) >= 1e-4 ){
-                    printf("Error on %d. Computed=%.5f, Ref=%.5f, Delta=%.5f\n",
-                        i, price, data[i].DGrefval, priceDelta);
-                    numError ++;
-                }
-    #endif
-            }
-        }
+    for(i=0; i<nThreads; i++) {
+        tids[i]=i;
+        pthread_create(&(threads[i]), NULL, bs_thread, &(tids[i]));
     }
+    for(i=0; i<nThreads; i++) {
+        pthread_join(threads[i], NULL);
+    }
+    free(tids);
+    free(threads);
     GET_TIME(stop);
     end = stop - start;
-    printf("Time: %f seconds\n", end);
+    printf("Time: %f seconds\n", end);    
 
     //Write prices to output file
     file = fopen(outputFile, "w");
