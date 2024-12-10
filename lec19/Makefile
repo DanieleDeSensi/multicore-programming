@@ -4,7 +4,7 @@ CFLAGS      = -arch=sm_75
 
 RM=rm -f
 
-EXES=vector_add test_cuda image_blur
+EXES=vector_add test_cuda image_blur image_blur_shared
 
 all: $(EXES)
 
