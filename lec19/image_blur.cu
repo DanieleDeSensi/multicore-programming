@@ -3,11 +3,10 @@
 #include <stdio.h>
 #include "../lec13/my_timer.h"
 
-#define HEIGHT 10240
-#define WIDTH 10240
+#define HEIGHT 8192
+#define WIDTH 8192
 #define NUM_PIXELS (HEIGHT*WIDTH)
 #define NUM_CHANNELS 1
-#define BLUR_SIZE 1
 
 __global__ void blurKernel(unsigned char* in, unsigned char* out, int w, int h){
 	int col = blockIdx.x*blockDim.x + threadIdx.x;
@@ -61,8 +60,8 @@ int main(int argc, char** argv){
 
 	printf("Data copied to device.\n"); fflush(stdout);
 	
-	dim3 dimGrid(ceil(WIDTH/16.0), ceil(HEIGHT/16.0));
-	dim3 dimBlock(16, 16);
+	dim3 dimGrid(ceil(WIDTH/(float) BLOCK_SIZE), ceil(HEIGHT/ (float) BLOCK_SIZE));
+	dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
 	double start, stop;
 
 	// In principle we should also include in the timing the time to copy data to/from the device,

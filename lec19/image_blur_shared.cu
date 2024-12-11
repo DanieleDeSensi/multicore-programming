@@ -3,12 +3,10 @@
 #include <stdio.h>
 #include "../lec13/my_timer.h"
 
-#define HEIGHT 10240
-#define WIDTH 10240
+#define HEIGHT 8192
+#define WIDTH 8192
 #define NUM_PIXELS (HEIGHT*WIDTH)
 #define NUM_CHANNELS 1
-#define BLUR_SIZE 1
-#define BLOCK_SIZE 16
 
 __global__ void blurKernel(unsigned char* in, unsigned char* out, int w, int h){
         __device__ __shared__ unsigned char in_shared[BLOCK_SIZE][BLOCK_SIZE]; // ATTENTION: I expressed it as a static 2D array, so I can use 2D indexing
