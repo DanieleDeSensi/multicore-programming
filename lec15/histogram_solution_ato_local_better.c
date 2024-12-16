@@ -46,7 +46,7 @@ int main(int argc, char** argv){
         int tid = omp_get_thread_num();
         #pragma omp for
         for(unsigned long i = 0; i < ARRAY_SIZE; i++){
-            counts_local[tid][array[i]]++; // ATTENTION: Still some false sharing might happen here
+            counts_local[tid][array[i]]++;
         }
 
         #pragma omp for

@@ -1,0 +1,48 @@
+
+Simulation of a Wind Tunnel
+
+EduHPC 2021: Peachy assignment
+
+(c) 2021 Arturo Gonzalez-Escribano, Yuri Torres
+Group Trasgo, Universidad de Valladolid (Spain)
+
+--------------------------------------------------------------
+
+Read the handout and use the sequential code as reference to study.
+Use the other source files to parallelize with the proper programming model.
+
+Edit the first lines in the Makefile to set your preferred compilers and flags
+for both the sequential code and for each parallel programming model: 
+OpenMP, MPI, and CUDA.
+
+To see a description of the Makefile options execute:
+$ make help 
+
+Examples:
+
+Use the following combinatios of arguments for your first tests.
+You will discover that they represent different classes of scenarios
+and problems when the code is parallelized.
+Students are encouraged to design and use their own scenarios for more 
+complete tests. See a description of the arguments in the handout.
+
+Examples:
+
+Only propagation:
+./wind_seq 538 60 1397 0.5 30 29 0 0 0 0 0 0 3431 9012 6432
+
+./wind_seq 456 812 1004 2.2 21 745 0 0 0 0 0 0 684 384 1292
+
+./wind_seq 38000 32 31000 0.5 3 24 0 0 0 0 0 0 583 1943 2345
+
+./wind_seq 32 2100000 118 0.1 0 2100000 0 0 0 0 0 0 673 3902 43
+
+Fixed particles with chosen positions:
+./wind_seq 102 80 352 0.1 10 50 0 0 0 0 0 0 3431 9012 12432 20 12 0.712 20 13 0.713 20 14 0.714 20 15 0.715 20 16 0.716 20 17 0.717 20 18 0.718 20 19 0.719 20 20 0.720 30 16 0.516 30 18 0.518 30 20 0.520 30 22 0.522 40 20 0.420 40 30 0.430 40 40 0.440 40 50 0.450 40 60 0.460 40 70 0.470
+
+Fixed particles with random and chosen positions:
+./wind_seq 102 80 352 0.1 10 50 15 16 0.1 0 0 0 3431 9012 12432 20 12 0.712 20 13 0.713 20 14 0.714 20 15 0.715 20 16 0.716 20 17 0.717 20 18 0.718 20 19 0.719 20 20 0.720 30 16 0.516 30 18 0.518 30 20 0.520 30 22 0.522 40 20 0.420 40 30 0.430 40 40 0.440 40 50 0.450 40 60 0.460 40 70 0.470
+
+Fixed and moving particles with initial random positions:
+./wind_seq 2100 457 6300 0.4 1 452 20 2000 0.001 16 50 0.2 583 223 712
+

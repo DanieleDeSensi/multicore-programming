@@ -188,14 +188,14 @@ int main()
         
         if (iterations % 100 == 0) {
 	    // Reinitialize sum_d and diffsum_d to 0
-	    sum_h = 0; diffsum_h = 0;
-	    CUDA_CHECK( cudaMemcpy(sum_d, &sum_h, sizeof(double), cudaMemcpyHostToDevice) );
-	    CUDA_CHECK( cudaMemcpy(diffsum_d, &diffsum_h, sizeof(double), cudaMemcpyHostToDevice) );
+	        sum_h = 0; diffsum_h = 0;
+	        CUDA_CHECK( cudaMemcpy(sum_d, &sum_h, sizeof(double), cudaMemcpyHostToDevice) );
+	        CUDA_CHECK( cudaMemcpy(diffsum_d, &diffsum_h, sizeof(double), cudaMemcpyHostToDevice) );
 	    
             diffGPU<<<dimGrid, dimBlock>>>(phiPrev_d, phi_d, N, sum_d, diffsum_d);
             CUDA_CHECK( cudaMemcpy(&sum_h, sum_d, sizeof(double), cudaMemcpyDeviceToHost) );
-	    CUDA_CHECK( cudaMemcpy(&diffsum_h, diffsum_d, sizeof(double), cudaMemcpyDeviceToHost) );
-	    diff = sqrt(diffsum_h/sum_h);
+	        CUDA_CHECK( cudaMemcpy(&diffsum_h, diffsum_d, sizeof(double), cudaMemcpyDeviceToHost) );
+	        diff = sqrt(diffsum_h/sum_h);
             CHECK_ERROR_MSG("Difference computation");
             printf("%d %g\n", iterations, diff);
         }
