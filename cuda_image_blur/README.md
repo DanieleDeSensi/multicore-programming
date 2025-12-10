@@ -1,0 +1,2 @@
+- image_blur.cu: Example on image blurring with data in global memory
+- image_blur_shared.cu: Example on image blurring with (part of the) data in shared memory
